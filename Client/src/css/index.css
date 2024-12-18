@@ -1,0 +1,38 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.titulo {
+  color: rgb(0, 0, 0);
+  font-size: 2rem;
+  position: absolute;
+  margin-top: -40%;
+}
+
+.buttonDayNight {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: rgb(127, 127, 127);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+  color: rgb(255, 255, 255);
+  z-index: 100;
+}
+
+.buttonDayNight:hover {
+  background-color: #1e1e1e;
+}

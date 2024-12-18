@@ -1,0 +1,120 @@
+/* Estilos Gerais */
+.card {
+  background-color: #0062ff;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+  color: white;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.card h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Ajuste no container do input para colocar o botão à direita */
+.input-container {
+  display: flex;
+  align-items: center; /* Alinha os itens verticalmente */
+  position: relative;
+  width: 100%; /* Garantir que o container ocupe toda a largura */
+}
+
+.input-container input {
+  flex: 1; /* Faz o input ocupar o máximo de espaço disponível */
+  height: 50px;
+  padding: 0 10px;
+  border: 2px solid #ffffff;
+  background-color: transparent;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input-container input:focus {
+  border-color: #00ff2f;
+}
+
+.input-container input:focus ~ label,
+.input-container input:not(:placeholder-shown) ~ label {
+  font-size: 0.8rem;
+  top: 0;
+  background-color: #0062ff;
+  color: #00ff2f;
+  padding: 0 5px;
+  border-radius: 5px;
+}
+
+.input-container label {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: #ffffff;
+  background-color: transparent;
+  padding: 0 5px;
+  transition: all 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+/* Estilo para o botão de pesquisa */
+.input-container button {
+  background-color: #007bff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 10px; /* Espaçamento entre o input e o botão */
+}
+
+.input-container button img {
+  width: 20px;
+  height: 20px;
+}
+
+.input-container button:hover {
+  background-color: #0056b3;
+}
+
+/* Exibição do Clima */
+#weather-data {
+  margin-top: 20px;
+  text-align: left;
+}
+
+#weather-data h2 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+#description-details {
+  margin-top: 10px;
+}
+
+#description-details p {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+#details-container {
+  margin-top: 20px;
+}
+
+#details-container p {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+#details-container p i {
+  margin-right: 10px;
+}
