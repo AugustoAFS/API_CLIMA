@@ -7,6 +7,7 @@ function Card({ onCitySelect }) {
   const [cidade, setCidade] = useState('');
   const [clima, setClima] = useState(null);
   const [error, setError] = useState('');
+  const [countryCode, setCountryCode] = useState('');
 
   const handleInputChange = (event) => {
     setCidade(event.target.value);
@@ -25,14 +26,32 @@ function Card({ onCitySelect }) {
         lat: data.location.lat,
         lon: data.location.lon,
       });
+      fetchCountryCode(data.location.country);
     } catch (error) {
-      setError(error.message);
+      setError(error.message || 'Erro ao buscar informações do clima.');
+    }
+  };
+
+  const fetchCountryCode = async (countryName) => {
+    try {
+      const response = await fetch(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`);
+      const data = await response.json();
+      if (data && data[0] && data[0].cca2) {
+        setCountryCode(data[0].cca2.toLowerCase());
+      } else {
+        setCountryCode('');
+      }
+    } catch (err) {
+      console.error('Erro ao buscar código do país:', err);
+      setCountryCode('');
     }
   };
 
   return (
     <div className="card">
       <h2>Informações do Clima</h2>
+
+      {/* Formulário de Pesquisa */}
       <form onSubmit={handleSubmit}>
         <div className="input-container">
           <input
@@ -51,42 +70,50 @@ function Card({ onCitySelect }) {
         </div>
       </form>
 
+      {/* Mensagem de Erro */}
       {error && <p className="error">{error}</p>}
 
+      {/* Dados do Clima */}
       {clima && (
-        <>
-          <div id="weather-data" className="show">
-            <h2>
-              <i className="fa-solid fa-location-dot"></i>
-              <span id="City">{clima.location.name}</span>
-              <img
-                src={`https://flagsapi.com/${clima.location.country}/flat/64.png`}
-                alt="Bandeira do País"
-                id="country"
-              />
-            </h2>
+        <div className="weather-container">
 
-            <div id="description-details">
-              <p id="description">
-                <span>{clima.current.condition.text}</span>
-              </p>
-              <p id="temperature">
-                <span>{clima.current.temp_c}&deg;C</span>
-              </p>
+          {/* Localização */}
+          <div className="location">
+            <h3>
+              {clima.location.name}, {clima.location.region}
+            </h3>
+            {countryCode && (
+              <img
+                src={`https://flagcdn.com/64x48/${countryCode}.png`}
+                alt={`Bandeira de ${clima.location.country}`}
+                className="flag"
+              />
+            )}
+          </div>
+
+          {/* Condição Atual */}
+          <div className="current-weather">
+            <img
+              src={`https:${clima.current.condition.icon}`}
+              alt={clima.current.condition.text}
+              className="weather-icon"
+            />
+            <div>
+              <h4>{clima.current.condition.text}</h4>
+              <p>{clima.current.temp_c}°C</p>
+              <p>Sensação térmica: {clima.current.feelslike_c}°C</p>
             </div>
           </div>
 
-          <div id="details-container">
-            <p id="umidity">
-              <i className="fa-solid fa-droplet"></i>
-              <span>{clima.current.humidity}%</span>
-            </p>
-            <p id="wind">
-              <i className="fa-solid fa-wind"></i>
-              <span>{clima.current.wind_kph} km/h</span>
-            </p>
+          {/* Detalhes do Clima */}
+          <div className="weather-details">
+            <p><i className="fa-solid fa-droplet"></i> Umidade: {clima.current.humidity}%</p>
+            <p><i className="fa-solid fa-wind"></i> Vento: {clima.current.wind_kph} km/h</p>
+            <p><i className="fa-solid fa-eye"></i> Visibilidade: {clima.current.vis_km} km</p>
+            <p><i className="fa-solid fa-weight"></i> Pressão: {clima.current.pressure_mb} hPa</p>
+            <p><i className="fa-solid fa-sun"></i> Índice UV: {clima.current.uv}</p>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

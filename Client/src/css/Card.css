@@ -1,4 +1,4 @@
-/* Estilos Gerais */
+/* ========== Estilos Gerais ========== */
 .card {
   background-color: #0062ff;
   border-radius: 10px;
@@ -16,16 +16,16 @@
   margin-bottom: 20px;
 }
 
-/* Ajuste no container do input para colocar o botão à direita */
+/* ========== Formulário de Pesquisa ========== */
 .input-container {
   display: flex;
-  align-items: center; /* Alinha os itens verticalmente */
+  align-items: center;
   position: relative;
-  width: 100%; /* Garantir que o container ocupe toda a largura */
+  width: 100%;
 }
 
 .input-container input {
-  flex: 1; /* Faz o input ocupar o máximo de espaço disponível */
+  flex: 1;
   height: 50px;
   padding: 0 10px;
   border: 2px solid #ffffff;
@@ -64,7 +64,6 @@
   pointer-events: none;
 }
 
-/* Estilo para o botão de pesquisa */
 .input-container button {
   background-color: #007bff;
   border: none;
@@ -72,7 +71,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-left: 10px; /* Espaçamento entre o input e o botão */
+  margin-left: 10px;
 }
 
 .input-container button img {
@@ -84,37 +83,101 @@
   background-color: #0056b3;
 }
 
-/* Exibição do Clima */
-#weather-data {
-  margin-top: 20px;
-  text-align: left;
-}
-
-#weather-data h2 {
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-}
-
-#description-details {
+/* ========== Mensagem de Erro ========== */
+.error {
+  color: #ff4d4d;
+  font-size: 14px;
   margin-top: 10px;
 }
 
-#description-details p {
-  font-size: 16px;
-  margin: 5px 0;
-}
-
-#details-container {
+/* ========== Exibição do Clima ========== */
+.weather-container {
   margin-top: 20px;
 }
 
-#details-container p {
+/* Localização */
+.location {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.location h3 {
+  font-size: 20px;
+  margin: 10px 0;
+}
+
+.flag {
+  width: 64px;
+  height: 48px;
+  object-fit: cover;
+  filter: contrast(1.1) brightness(1.1);
+}
+
+/* Condição Atual */
+.current-weather {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.weather-icon {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  filter: contrast(1.5) brightness(1.1);
+  margin-right: 15px;
+}
+
+.current-weather div {
+  text-align: left;
+}
+
+.current-weather h4 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.current-weather p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Detalhes do Clima */
+.weather-details {
+  text-align: left;
+}
+
+.weather-details p {
   font-size: 16px;
   display: flex;
   align-items: center;
+  margin: 5px 0;
 }
 
-#details-container p i {
+.weather-details p i {
   margin-right: 10px;
+}
+
+/* ========== Responsividade ========== */
+@media (max-width: 600px) {
+  .card {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  .input-container input {
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .input-container button {
+    padding: 8px;
+  }
+
+  .location h3,
+  .current-weather h4,
+  .weather-details p {
+    font-size: 14px;
+  }
 }
