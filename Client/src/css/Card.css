@@ -1,4 +1,11 @@
-/* ========== Estilos Gerais ========== */
+.card-container {
+  flex: 1;
+  max-width: 400px;
+  min-width: 280px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
 .card {
   background-color: #0062ff;
   border-radius: 10px;
@@ -7,16 +14,24 @@
   max-width: 400px;
   color: white;
   margin: 20px auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   text-align: center;
+  position: relative;
+  height: auto;
+  overflow: hidden;
 }
 
-.card h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
+.card .background-image {
+  background-attachment: fixed;
 }
 
-/* ========== Formulário de Pesquisa ========== */
+.weather-container,
+.input-container,
+.error {
+  position: relative;
+  z-index: 2;
+}
+
 .input-container {
   display: flex;
   align-items: center;
@@ -83,19 +98,16 @@
   background-color: #0056b3;
 }
 
-/* ========== Mensagem de Erro ========== */
 .error {
   color: #ff4d4d;
   font-size: 14px;
   margin-top: 10px;
 }
 
-/* ========== Exibição do Clima ========== */
 .weather-container {
   margin-top: 20px;
 }
 
-/* Localização */
 .location {
   text-align: center;
   margin-bottom: 20px;
@@ -113,7 +125,6 @@
   filter: contrast(1.1) brightness(1.1);
 }
 
-/* Condição Atual */
 .current-weather {
   display: flex;
   align-items: center;
@@ -143,7 +154,6 @@
   margin: 0;
 }
 
-/* Detalhes do Clima */
 .weather-details {
   text-align: left;
 }
@@ -159,11 +169,14 @@
   margin-right: 10px;
 }
 
-/* ========== Responsividade ========== */
 @media (max-width: 600px) {
   .card {
     padding: 15px;
     font-size: 14px;
+  }
+
+  .card .background-image {
+    background-attachment: scroll;
   }
 
   .input-container input {
@@ -179,5 +192,22 @@
   .current-weather h4,
   .weather-details p {
     font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    font-size: 12px;
+  }
+
+  .input-container input,
+  .input-container button {
+    font-size: 12px;
+  }
+
+  .location h3,
+  .current-weather h4,
+  .weather-details p {
+    font-size: 12px;
   }
 }

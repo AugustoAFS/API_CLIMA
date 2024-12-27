@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/Card.css';
 import Pesquisar from '../assets/icon/procurar.png';
 import { getClima } from '../api_clima/Conection';
+import { getIMG } from '../api_img/IMG_Conection';
 
 function Card({ onCitySelect }) {
   const [cidade, setCidade] = useState('');
   const [clima, setClima] = useState(null);
   const [error, setError] = useState('');
   const [countryCode, setCountryCode] = useState('');
+  const [backgroundImages, setBackgroundImages] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [fade, setFade] = useState(false);
 
   const handleInputChange = (event) => {
     setCidade(event.target.value);
@@ -17,6 +22,15 @@ function Card({ onCitySelect }) {
     event.preventDefault();
     setError('');
     setClima(null);
+    setLoading(true);
+    setFade(true);
+
+    if (!cidade.trim()) {
+      setError('Por favor, insira o nome de uma cidade.');
+      setLoading(false);
+      setFade(false);
+      return;
+    }
 
     try {
       const data = await getClima(cidade);
@@ -27,8 +41,13 @@ function Card({ onCitySelect }) {
         lon: data.location.lon,
       });
       fetchCountryCode(data.location.country);
+      fetchBackgroundImages(data.location.name);
+      setFade(false);
     } catch (error) {
       setError(error.message || 'Erro ao buscar informações do clima.');
+      setFade(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,11 +66,36 @@ function Card({ onCitySelect }) {
     }
   };
 
+  const fetchBackgroundImages = async (cidade) => {
+    try {
+      const imageData = await getIMG(cidade);
+      setBackgroundImages(imageData.urls || ['/default-image.jpg']);
+    } catch (err) {
+      console.error('Erro ao buscar as imagens de fundo:', err);
+      setBackgroundImages(['/default-image.jpg']);
+    }
+  };
+
+  useEffect(() => {
+    if (backgroundImages.length > 0) {
+      const intervalId = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % backgroundImages.length);
+      }, 3000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [backgroundImages]);
+
   return (
-    <div className="card">
+    <div
+      className={`card ${fade ? 'fade-out' : 'fade-in'}`} 
+      style={{
+        backgroundImage: backgroundImages.length > 0 ? `url(${backgroundImages[currentImageIndex]})` : '',
+        transition: 'background-image 0.5s ease-in-out',
+      }}
+    >
       <h2>Informações do Clima</h2>
 
-      {/* Formulário de Pesquisa */}
       <form onSubmit={handleSubmit}>
         <div className="input-container">
           <input
@@ -70,14 +114,12 @@ function Card({ onCitySelect }) {
         </div>
       </form>
 
-      {/* Mensagem de Erro */}
       {error && <p className="error">{error}</p>}
 
-      {/* Dados do Clima */}
+      {loading && <p>Carregando...</p>}
+
       {clima && (
         <div className="weather-container">
-
-          {/* Localização */}
           <div className="location">
             <h3>
               {clima.location.name}, {clima.location.region}
@@ -91,7 +133,6 @@ function Card({ onCitySelect }) {
             )}
           </div>
 
-          {/* Condição Atual */}
           <div className="current-weather">
             <img
               src={`https:${clima.current.condition.icon}`}
@@ -105,7 +146,6 @@ function Card({ onCitySelect }) {
             </div>
           </div>
 
-          {/* Detalhes do Clima */}
           <div className="weather-details">
             <p><i className="fa-solid fa-droplet"></i> Umidade: {clima.current.humidity}%</p>
             <p><i className="fa-solid fa-wind"></i> Vento: {clima.current.wind_kph} km/h</p>

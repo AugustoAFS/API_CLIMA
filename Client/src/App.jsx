@@ -6,36 +6,72 @@ import { Canvas } from '@react-three/fiber';
 import Globo from './globo/Globo';
 import Luzes from './globo/Luzes';
 import Card from './components/Card';
+import Mapa from './components/Mapa';
 import ToggleButton from './components/ToggleButton';
 import { OrbitControls } from '@react-three/drei';
+import 'leaflet/dist/leaflet.css';
 
 function App() {
-  const [isDay, setIsDay] = useState(true);
+  const [isDayTheme, setIsDayTheme] = useState(true);
   const [selectedCity, setSelectedCity] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+  const [isGlobeVisible, setIsGlobeVisible] = useState(true);
 
-  const toggleImage = () => {
-    setIsDay(!isDay);
+  const toggleTheme = () => {
+    setIsDayTheme(!isDayTheme);
   };
 
   useEffect(() => {
-    document.body.className = isDay ? 'day-theme' : 'night-theme';
-  }, [isDay]);
+    document.body.className = isDayTheme ? 'day-theme' : 'night-theme';
+  }, [isDayTheme]);
+
+  useEffect(() => {
+    if (selectedCity) {
+      setShowMap(true);
+      setIsGlobeVisible(false);
+    } else {
+      setShowMap(false);
+      setIsGlobeVisible(true);
+    }
+  }, [selectedCity]);
 
   const handleCitySelect = (city) => {
-    setSelectedCity(city);
-    console.log('Cidade selecionada:', city);
+    setIsSearching(true);
+    setShowMap(false);
+
+    setTimeout(() => {
+      setSelectedCity({
+        lat: city.lat,
+        lon: city.lon,
+      });
+      setIsSearching(false);
+    }, 3000);
+  };
+
+  const handleSearchReset = () => {
+    setShowMap(false);
+    setTimeout(() => {
+      setShowMap(true);
+    }, 2000);
   };
 
   return (
-    <div className="App">     
+    <div className="App">
       <div className="content">
-        <h1 className="titulo">API CLIMA</h1>
-        <ToggleButton isDay={isDay} onToggle={toggleImage} />
+        <header>
+          <nav>
+            <h1 className={`titulo ${!isDayTheme ? 'night' : ''}`}>API CLIMA</h1>
+            <ToggleButton isDay={isDayTheme} onToggle={toggleTheme} />
+          </nav>
+        </header>
+
         <div className="card-container">
           <Card onCitySelect={handleCitySelect} />
         </div>
+
         <div className="canvas-container">
-          <Canvas
+          <Canvas id='canvas'
             camera={{
               position: [0, 0, 3],
               fov: 75,
@@ -43,10 +79,24 @@ function App() {
               far: 100,
             }}
           >
-            <Luzes isDay={isDay} />
-            <Globo isDay={isDay} selectedCity={selectedCity} />
+            <Luzes isDay={isDayTheme} />
+            <Globo
+              isDay={isDayTheme}
+              selectedCity={selectedCity}
+              isSearching={isSearching}
+            />
             <OrbitControls />
           </Canvas>
+
+          <div className={`Mapa-Container ${showMap ? 'show' : 'hide'}`}>
+            {isSearching ? (
+              <p>Carregando mapa...</p>
+            ) : selectedCity ? (
+              <Mapa coordinates={selectedCity} />
+            ) : (
+              <p className="no-city-message">Selecione uma cidade para visualizar o mapa.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
