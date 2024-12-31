@@ -15,7 +15,7 @@ const Mapa = ({ coordinates, mapHeight = '500px' }) => {
     });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
-      maxZoom: 18,
+      maxZoom: 50,
     }).addTo(map);
     L.marker([coordinates.lat, coordinates.lon]).addTo(map);
     map.invalidateSize();
