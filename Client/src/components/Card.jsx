@@ -12,6 +12,8 @@ function Card({ onCitySelect }) {
   const [backgroundImages, setBackgroundImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const [fade, setFade] = useState(false);
 
   const handleInputChange = (event) => {
@@ -68,95 +70,135 @@ function Card({ onCitySelect }) {
 
   const fetchBackgroundImages = async (cidade) => {
     try {
+      setImageLoading(true);
+      setImageError(false);
       const imageData = await getIMG(cidade);
-      setBackgroundImages(imageData.urls || ['/default-image.jpg']);
+      if (imageData && imageData.urls && imageData.urls.length > 0) {
+        setBackgroundImages(imageData.urls);
+      } else {
+        setBackgroundImages(['/default-image.jpg']);
+      }
     } catch (err) {
       console.error('Erro ao buscar as imagens de fundo:', err);
       setBackgroundImages(['/default-image.jpg']);
+      setImageError(true);
+    } finally {
+      setImageLoading(false);
     }
   };
 
   useEffect(() => {
     if (backgroundImages.length > 0) {
       const intervalId = setInterval(() => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % backgroundImages.length);
-      }, 3000);
+        setCurrentImageIndex((prevIndex) => (prevIndex + 2) % backgroundImages.length);
+      }, 2000);
 
       return () => clearInterval(intervalId);
     }
   }, [backgroundImages]);
 
   return (
-    <div
-      className={`card ${fade ? 'fade-out' : 'fade-in'}`} 
-      style={{
-        backgroundImage: backgroundImages.length > 0 ? `url(${backgroundImages[currentImageIndex]})` : '',
-        transition: 'background-image 0.5s ease-in-out',
-      }}
-    >
-      <h2>Informações do Clima</h2>
-
-      <form onSubmit={handleSubmit}>
-        <div className="input-container">
-          <input
-            className="grupo-cidade"
-            type="text"
-            id="cidade"
-            value={cidade}
-            onChange={handleInputChange}
-            placeholder=" "
-            required
+    <div className="card-container">
+      <div className={`card ${fade ? 'fade-out' : 'fade-in'}`}>
+        {backgroundImages.length > 0 && (
+          <img
+            src={backgroundImages[currentImageIndex]}
+            alt="Background"
+            className={`background-image ${imageLoading ? 'loading' : ''} ${imageError ? 'error' : ''}`}
+            onLoad={() => setImageLoading(false)}
+            onError={() => {
+              setImageError(true);
+              setImageLoading(false);
+            }}
           />
-          <label htmlFor="cidade">Cidade</label>
-          <button type="submit">
-            <img src={Pesquisar} alt="Pesquisar" />
-          </button>
-        </div>
-      </form>
+        )}
 
-      {error && <p className="error">{error}</p>}
+        <h2>Informações do Clima</h2>
 
-      {loading && <p>Carregando...</p>}
-
-      {clima && (
-        <div className="weather-container">
-          <div className="location">
-            <h3>
-              {clima.location.name}, {clima.location.region}
-            </h3>
-            {countryCode && (
-              <img
-                src={`https://flagcdn.com/64x48/${countryCode}.png`}
-                alt={`Bandeira de ${clima.location.country}`}
-                className="flag"
-              />
-            )}
-          </div>
-
-          <div className="current-weather">
-            <img
-              src={`https:${clima.current.condition.icon}`}
-              alt={clima.current.condition.text}
-              className="weather-icon"
+        <form onSubmit={handleSubmit}>
+          <div className="input-container">
+            <input
+              className="grupo-cidade"
+              type="text"
+              id="cidade"
+              value={cidade}
+              onChange={handleInputChange}
+              placeholder=" "
+              required
             />
-            <div>
-              <h4>{clima.current.condition.text}</h4>
-              <p>{clima.current.temp_c}°C</p>
-              <p>Sensação térmica: {clima.current.feelslike_c}°C</p>
+            <label htmlFor="cidade">Cidade</label>
+            <button type="submit" disabled={loading}>
+              <img src={Pesquisar} alt="Pesquisar" />
+            </button>
+          </div>
+        </form>
+
+        {error && <p className="error">{error}</p>}
+
+        {loading && <p>Carregando...</p>}
+
+        {clima && (
+          <div className="weather-container">
+            <div className="location">
+              <h3>
+                {clima.location.name}, {clima.location.region}
+              </h3>
+              {countryCode && (
+                <img
+                  src={`https://flagcdn.com/64x48/${countryCode}.png`}
+                  alt={`Bandeira de ${clima.location.country}`}
+                  className="flag"
+                />
+              )}
+            </div>
+
+            <div className="current-weather">
+              <img
+                src={`https:${clima.current.condition.icon}`}
+                alt={clima.current.condition.text}
+                className="weather-icon"
+              />
+              <div>
+                <h4>{clima.current.condition.text}</h4>
+                <p>{clima.current.temp_c}°C</p>
+                <p>Sensação térmica: {clima.current.feelslike_c}°C</p>
+              </div>
+            </div>
+
+            <div className="weather-details">
+              <p><i className="fa-solid fa-droplet"></i> Umidade: {clima.current.humidity}%</p>
+              <p><i className="fa-solid fa-wind"></i> Vento: {clima.current.wind_kph} km/h</p>
+              <p><i className="fa-solid fa-eye"></i> Visibilidade: {clima.current.vis_km} km</p>
+              <p><i className="fa-solid fa-weight"></i> Pressão: {clima.current.pressure_mb} hPa</p>
+              <p><i className="fa-solid fa-sun"></i> Índice UV: {clima.current.uv}</p>
             </div>
           </div>
-
-          <div className="weather-details">
-            <p><i className="fa-solid fa-droplet"></i> Umidade: {clima.current.humidity}%</p>
-            <p><i className="fa-solid fa-wind"></i> Vento: {clima.current.wind_kph} km/h</p>
-            <p><i className="fa-solid fa-eye"></i> Visibilidade: {clima.current.vis_km} km</p>
-            <p><i className="fa-solid fa-weight"></i> Pressão: {clima.current.pressure_mb} hPa</p>
-            <p><i className="fa-solid fa-sun"></i> Índice UV: {clima.current.uv}</p>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 export default Card;

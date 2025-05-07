@@ -1,77 +1,112 @@
 #root {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100vw;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 100vh;
+  width: 100%;
   margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 .App {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  width: 100vw;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .content {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  gap: 40px;
+  justify-content: center;
   width: 100%;
-  margin-top: 8%;
-  padding-left: 20%;
-  padding-right: 20%;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 20px;
+  padding: 20px 15px;
+  box-sizing: border-box;
+  min-height: calc(100vh - 60px);
+  margin-top: 60px;
 }
-/* ----------------------------- (GLOBO) ------------------------------------- */
+
 .canvas-container {
-  flex: 1;
-  min-width: 500px;
+  width: 100%;
   max-width: 600px;
-  height: 100%;
-  aspect-ratio: 1;
+  height: 400px;
   position: relative;
   overflow: hidden;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .canvas-container .map-visible {
   border-radius: 0;
 }
-/* ----------------------------- (GLOBO) ------------------------------------- */
-@media (max-width: 768px) {
-  .content {
-    gap: 20px;
-  }
 
-  .card-container {
-    max-width: 90%;
+@media (min-width: 1024px) {
+  .content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
   }
 
   .canvas-container {
-    max-width: 90%;
-    height: 250px;
+    flex: 1;
+    min-width: 500px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .content {
+    gap: 30px;
+    min-height: calc(100vh - 50px);
+    margin-top: 50px;
   }
 
-  .Mapa-Container {
-    height: 100%;
+  .canvas-container {
+    height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    gap: 20px;
+    padding: 15px 10px;
+    min-height: calc(100vh - 45px);
+    margin-top: 45px;
+  }
+
+  .canvas-container {
+    height: 300px;
   }
 }
 
 @media (max-width: 480px) {
   .content {
     gap: 15px;
+    padding: 10px 5px;
+    margin-top: 40px;
   }
 
   .canvas-container {
-    max-width: 100%;
-    height: 200px;
+    height: 250px;
   }
+}
 
-  .Mapa-Container {
-    height: 100%;
+/* Ajustes para telas muito pequenas */
+@media (max-width: 320px) {
+  .canvas-container {
+    height: 250px;
+    min-width: 250px;
   }
 }

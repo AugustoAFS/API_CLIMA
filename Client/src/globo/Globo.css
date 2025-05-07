@@ -1,0 +1,60 @@
+.globe {
+  transform-style: preserve-3d;
+  transition: transform 2s ease-in-out;
+}
+
+.globe.selected {
+  animation-play-state: paused;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+/* Quando uma cidade é selecionada, pausa a rotação */
+.globe.selected {
+  animation-play-state: paused;
+}
+
+.map-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease-out;
+  z-index: 1000;
+}
+
+.map-content {
+  text-align: center;
+}
+
+.map-content h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.map-content p {
+  color: #666;
+  margin: 0.5rem 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+} 

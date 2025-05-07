@@ -17,6 +17,7 @@ function App() {
   const [isSearching, setIsSearching] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [isGlobeVisible, setIsGlobeVisible] = useState(true);
+  const [isGlobeRotating, setIsGlobeRotating] = useState(false);
 
   const toggleTheme = () => {
     setIsDayTheme(!isDayTheme);
@@ -29,31 +30,26 @@ function App() {
   useEffect(() => {
     if (selectedCity) {
       setShowMap(true);
-      setIsGlobeVisible(false);
-    } else {
-      setShowMap(false);
-      setIsGlobeVisible(true);
     }
   }, [selectedCity]);
 
   const handleCitySelect = (city) => {
     setIsSearching(true);
     setShowMap(false);
+    setSelectedCity(city);
+    setIsGlobeRotating(true);
 
     setTimeout(() => {
-      setSelectedCity({
-        lat: city.lat,
-        lon: city.lon,
-      });
       setIsSearching(false);
     }, 3000);
   };
 
-  const handleSearchReset = () => {
-    setShowMap(false);
-    setTimeout(() => {
-      setShowMap(true);
-    }, 2000);
+  const handleGlobeRotationComplete = () => {
+    setIsGlobeRotating(false);
+  };
+
+  const toggleMap = () => {
+    setShowMap(!showMap);
   };
 
   return (
@@ -71,30 +67,80 @@ function App() {
         </div>
 
         <div className="canvas-container">
-          <Canvas id='canvas'
-            camera={{
-              position: [0, 0, 3],
-              fov: 75,
-              near: 0.1,
-              far: 100,
-            }}
-          >
-            <Luzes isDay={isDayTheme} />
-            <Globo
-              isDay={isDayTheme}
-              selectedCity={selectedCity}
-              isSearching={isSearching}
-            />
-            <OrbitControls />
-          </Canvas>
+          {selectedCity && (
+            <button
+              onClick={toggleMap}
+              style={{
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                zIndex: 1000,
+                padding: '8px 16px',
+                backgroundColor: '#007bff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
+              onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
+            >
+              {showMap ? 'Esconder Mapa' : 'Mostrar Mapa'}
+            </button>
+          )}
 
-          <div className={`Mapa-Container ${showMap ? 'show' : 'hide'}`}>
-            {isSearching ? (
-              <p>Carregando mapa...</p>
-            ) : selectedCity ? (
-              <Mapa coordinates={selectedCity} />
-            ) : (
-              <p className="no-city-message">Selecione uma cidade para visualizar o mapa.</p>
+          <div style={{ 
+            position: 'relative',
+            width: '100%',
+            height: '100%'
+          }}>
+            <Canvas
+              id='canvas'
+              camera={{
+                position: [0, 0, 3],
+                fov: 75,
+                near: 0.1,
+                far: 100,
+              }}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                pointerEvents: showMap ? 'none' : 'auto',
+                zIndex: 1
+              }}
+            >
+              <Luzes isDay={isDayTheme} />
+              <Globo
+                isDay={isDayTheme}
+                selectedCity={selectedCity}
+                isSearching={isSearching}
+                onRotationComplete={handleGlobeRotationComplete}
+              />
+              <OrbitControls />
+            </Canvas>
+
+            {selectedCity && (
+              <div 
+                className={`Mapa-Container ${showMap ? 'show' : 'hide'}`}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  zIndex: 2,
+                  opacity: showMap ? 1 : 0,
+                  transition: 'opacity 0.5s ease-in-out',
+                  pointerEvents: showMap ? 'auto' : 'none'
+                }}
+              >
+                <Mapa coordinates={selectedCity} isGlobeRotating={isGlobeRotating} />
+              </div>
             )}
           </div>
         </div>

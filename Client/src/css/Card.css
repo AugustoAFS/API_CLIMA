@@ -1,28 +1,69 @@
 .card-container {
-  flex: 1;
-  max-width: 400px;
-  min-width: 280px;
-  padding: 10px;
+  width: 100%;
+  max-width: 450px;
+  height: auto;
+  padding: 15px;
   box-sizing: border-box;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
 }
 
 .card {
-  background-color: #0062ff;
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.473);
+  border-radius: 20px;
   padding: 20px;
   width: 100%;
-  max-width: 400px;
+  height: auto;
   color: white;
-  margin: 20px auto;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2),
+              0 0 0 1px rgba(255, 255, 255, 0.1);
   text-align: center;
   position: relative;
-  height: auto;
   overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
 }
 
 .card .background-image {
-  background-attachment: fixed;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.15;
+  z-index: 1;
+  transition: opacity 0.5s ease;
+}
+
+.card .background-image.loading {
+  opacity: 0;
+}
+
+.card .background-image.error {
+  display: none;
 }
 
 .weather-container,
@@ -30,6 +71,18 @@
 .error {
   position: relative;
   z-index: 2;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  width: 100%;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.weather-container:hover,
+.input-container:hover {
+  transform: translateY(-2px);
 }
 
 .input-container {
@@ -37,104 +90,162 @@
   align-items: center;
   position: relative;
   width: 100%;
+  margin-bottom: 1rem;
 }
 
 .input-container input {
   flex: 1;
-  height: 50px;
-  padding: 0 10px;
-  border: 2px solid #ffffff;
-  background-color: transparent;
-  border-radius: 5px;
-  font-size: 16px;
+  height: 45px;
+  padding: 0 15px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-size: 1rem;
   color: #ffffff;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .input-container input:focus {
   border-color: #00ff2f;
+  box-shadow: 0 0 15px rgba(0, 255, 47, 0.3);
 }
 
-.input-container input:focus ~ label,
-.input-container input:not(:placeholder-shown) ~ label {
-  font-size: 0.8rem;
-  top: 0;
-  background-color: #0062ff;
-  color: #00ff2f;
-  padding: 0 5px;
-  border-radius: 5px;
+.input-container input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  transition: all 0.3s ease;
+}
+
+.input-container input:focus::placeholder {
+  opacity: 0.7;
+  transform: translateX(5px);
 }
 
 .input-container label {
   position: absolute;
-  left: 15px;
+  margin-left: 15px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1rem;
-  color: #ffffff;
-  background-color: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  background: transparent;
   padding: 0 5px;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.input-container input:focus ~ label,
+.input-container input:not(:placeholder-shown) ~ label {
+  left: 15px;
+  top: 20px;
+  color: #00ff2f;
+  font-size: 0.9rem;
+  background: rgba(0, 0, 0, 0.785);
+  padding: 0 8px;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 .input-container button {
-  background-color: #007bff;
+  background: linear-gradient(135deg, #007bff, #0056b3);
   border: none;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 12px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   margin-left: 10px;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  height: 45px;
+  width: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-container button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.input-container button:active {
+  transform: translateY(0);
 }
 
 .input-container button img {
   width: 20px;
   height: 20px;
-}
-
-.input-container button:hover {
-  background-color: #0056b3;
+  filter: brightness(0) invert(1);
 }
 
 .error {
   color: #ff4d4d;
-  font-size: 14px;
-  margin-top: 10px;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(255, 77, 77, 0.1);
+  border: 1px solid rgba(255, 77, 77, 0.2);
 }
 
 .weather-container {
-  margin-top: 20px;
+  margin-top: 0.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.weather-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.weather-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.weather-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
 }
 
 .location {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 0.5rem;
 }
 
 .location h3 {
-  font-size: 20px;
-  margin: 10px 0;
+  font-size: 1.2rem;
+  margin: 0.3rem 0;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .flag {
-  width: 64px;
-  height: 48px;
+  width: 48px;
+  height: 36px;
   object-fit: cover;
   filter: contrast(1.1) brightness(1.1);
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .current-weather {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 0.5rem;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
 }
 
 .weather-icon {
-  width: 64px;
-  height: 64px;
+  width: 50px;
+  height: 50px;
   object-fit: contain;
   filter: contrast(1.5) brightness(1.1);
   margin-right: 15px;
@@ -145,69 +256,148 @@
 }
 
 .current-weather h4 {
-  font-size: 18px;
-  margin-bottom: 5px;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
 }
 
 .current-weather p {
-  font-size: 16px;
-  margin: 0;
+  font-size: 0.9rem;
+  margin: 0.2rem 0;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .weather-details {
   text-align: left;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
 }
 
 .weather-details p {
-  font-size: 16px;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
-  margin: 5px 0;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .weather-details p i {
-  margin-right: 10px;
+  margin-right: 8px;
+  font-size: 1rem;
+  color: #00ff2f;
+  width: 20px;
+  text-align: center;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1023px) {
+  .card-container {
+    max-width: 100%;
+    height: auto;
+  }
+
   .card {
     padding: 15px;
-    font-size: 14px;
   }
 
-  .card .background-image {
-    background-attachment: scroll;
+  .card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
   }
 
-  .input-container input {
-    height: 40px;
-    font-size: 14px;
+  .location h3 {
+    font-size: 1.1rem;
   }
 
-  .input-container button {
-    padding: 8px;
+  .weather-icon {
+    width: 45px;
+    height: 45px;
   }
 
-  .location h3,
-  .current-weather h4,
+  .current-weather h4 {
+    font-size: 0.9rem;
+  }
+
+  .weather-details {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
   .weather-details p {
-    font-size: 14px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .card-container {
+    padding: 10px;
+    height: auto;
+  }
+
+  .card {
+    padding: 12px;
+  }
+
+  .card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .location h3 {
+    font-size: 1rem;
+  }
+
+  .weather-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .current-weather h4 {
+    font-size: 0.85rem;
+  }
+
+  .weather-details p {
+    font-size: 0.75rem;
   }
 }
 
 @media (max-width: 480px) {
+  .card-container {
+    padding: 5px;
+    height: auto;
+  }
+
   .card {
-    font-size: 12px;
+    padding: 10px;
   }
 
-  .input-container input,
-  .input-container button {
-    font-size: 12px;
+  .card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
   }
 
-  .location h3,
-  .current-weather h4,
+  .location h3 {
+    font-size: 0.9rem;
+  }
+
+  .weather-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .current-weather h4 {
+    font-size: 0.8rem;
+  }
+
+  .weather-details {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
   .weather-details p {
-    font-size: 12px;
+    font-size: 0.7rem;
   }
 }
