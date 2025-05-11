@@ -177,28 +177,6 @@ function Card({ onCitySelect }) {
       </div>
     </div>
   );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 export default Card;

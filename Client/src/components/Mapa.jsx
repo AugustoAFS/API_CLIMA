@@ -13,10 +13,8 @@ const Mapa = ({ coordinates, mapHeight = '500px', isGlobeRotating }) => {
       return;
     }
 
-    // Só inicia o timer quando o globo parar de girar
     if (!isGlobeRotating) {
       const timer = setTimeout(() => {
-        // Se já existe um mapa, remove ele primeiro
         if (mapInstanceRef.current) {
           mapInstanceRef.current.remove();
           mapInstanceRef.current = null;
@@ -36,13 +34,11 @@ const Mapa = ({ coordinates, mapHeight = '500px', isGlobeRotating }) => {
           maxZoom: 50,
         }).addTo(newMap);
 
-        // Adiciona o marcador com animação
         const marker = L.marker([coordinates.lat, coordinates.lon], {
           riseOnHover: true,
           riseOffset: 300
         }).addTo(newMap);
 
-        // Animação suave do zoom
         newMap.flyTo([coordinates.lat, coordinates.lon], 13, {
           duration: 2,
           easeLinearity: 0.25
@@ -51,7 +47,7 @@ const Mapa = ({ coordinates, mapHeight = '500px', isGlobeRotating }) => {
         newMap.invalidateSize();
         mapInstanceRef.current = newMap;
         setIsLoading(false);
-      }, 1000); // Reduzido para 2 segundos já que agora esperamos o globo parar
+      }, 1000);
 
       return () => {
         clearTimeout(timer);

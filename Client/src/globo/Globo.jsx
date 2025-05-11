@@ -17,15 +17,12 @@ function Globo({ isDay, selectedCity, onRotationComplete }) {
 
   useEffect(() => {
     if (selectedCity) {
-      // Calcula a posição do ponto no globo
       const [x, y, z] = latLongToPosition(selectedCity.lat, selectedCity.lon);
       
-      // Calcula o ângulo de rotação baseado na longitude
       const targetAngle = -(selectedCity.lon * Math.PI) / 180;
       setTargetRotation(targetAngle);
       setIsRotating(true);
       
-      // Ajusta a posição da câmera para centralizar o ponto
       const distance = 2.5;
       const rightOffset = 2.5;
       const upOffset = 0.2;
@@ -35,11 +32,9 @@ function Globo({ isDay, selectedCity, onRotationComplete }) {
         z * distance
       ]);
       
-      // Inicia a animação de zoom
       setIsZooming(true);
       setScale(1.2);
       
-      // Após 4 segundos, retorna ao tamanho normal
       const zoomTimer = setTimeout(() => {
         setScale(1.2);
         setIsZooming(false);
@@ -58,7 +53,6 @@ function Globo({ isDay, selectedCity, onRotationComplete }) {
   useFrame(({ camera }) => {
     if (globeRef.current) {
       if (isRotating) {
-        // Rotação suave até o ponto de referência
         const currentRotation = globeRef.current.rotation.y;
         const newRotation = THREE.MathUtils.lerp(
           currentRotation,
@@ -67,15 +61,12 @@ function Globo({ isDay, selectedCity, onRotationComplete }) {
         );
         globeRef.current.rotation.y = newRotation;
 
-        // Suaviza o movimento da câmera
         camera.position.lerp(new THREE.Vector3(...targetPosition), 0.05);
         camera.lookAt(0, 0, 0);
       } else if (!selectedCity) {
-        // Rotação contínua normal apenas quando não há cidade selecionada
         globeRef.current.rotation.y += 0.01;
       }
       
-      // Suaviza a escala
       globeRef.current.scale.setScalar(
         THREE.MathUtils.lerp(globeRef.current.scale.x, scale, 0.05)
       );

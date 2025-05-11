@@ -8,6 +8,7 @@ import Luzes from './globo/Luzes';
 import Card from './components/Card';
 import Mapa from './components/Mapa';
 import ToggleButton from './components/ToggleButton';
+import SpaceBackground from './components/SpaceBackground';
 import { OrbitControls } from '@react-three/drei';
 import 'leaflet/dist/leaflet.css';
 
@@ -54,6 +55,38 @@ function App() {
 
   return (
     <div className="App">
+      <Canvas
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+          background: 'transparent'
+        }}
+        camera={{
+          position: [0, 0, 40],
+          fov: 75,
+          near: 0.1,
+          far: 1000,
+        }}
+      >
+        <SpaceBackground />
+        <OrbitControls 
+          enableZoom={true}
+          enablePan={true}
+          enableRotate={true}
+          zoomSpeed={0.6}
+          panSpeed={0.5}
+          rotateSpeed={0.4}
+          minDistance={5}
+          maxDistance={50}
+          target={[0, 0, 0]}
+          makeDefault={true}
+        />
+      </Canvas>
+
       <div className="content">
         <header>
           <nav>
@@ -96,13 +129,14 @@ function App() {
             width: '100%',
             height: '100%'
           }}>
+            {/* Canvas do globo */}
             <Canvas
-              id='canvas'
+              id='globe-canvas'
               camera={{
                 position: [0, 0, 3],
                 fov: 75,
                 near: 0.1,
-                far: 100,
+                far: 1000,
               }}
               style={{
                 position: 'absolute',
@@ -111,7 +145,8 @@ function App() {
                 width: '100%',
                 height: '100%',
                 pointerEvents: showMap ? 'none' : 'auto',
-                zIndex: 1
+                zIndex: 1,
+                background: 'transparent'
               }}
             >
               <Luzes isDay={isDayTheme} />
@@ -121,7 +156,18 @@ function App() {
                 isSearching={isSearching}
                 onRotationComplete={handleGlobeRotationComplete}
               />
-              <OrbitControls />
+              <OrbitControls 
+                enableZoom={true}
+                enablePan={true}
+                enableRotate={true}
+                zoomSpeed={0.6}
+                panSpeed={0.5}
+                rotateSpeed={0.4}
+                minDistance={2}
+                maxDistance={10}
+                target={[0, 0, 0]}
+                makeDefault={true}
+              />
             </Canvas>
 
             {selectedCity && (

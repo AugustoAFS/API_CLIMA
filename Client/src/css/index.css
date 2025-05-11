@@ -48,7 +48,7 @@ nav {
 
 .titulo {
   font-size: clamp(1.2rem, 4vw, 2.5rem);
-  color: inherit;
+  color: white;
   text-align: center;
   transition: color 0.3s ease;
   margin: 0;

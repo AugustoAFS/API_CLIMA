@@ -15,8 +15,6 @@
     transform: rotateY(360deg);
   }
 }
-
-/* Quando uma cidade é selecionada, pausa a rotação */
 .globe.selected {
   animation-play-state: paused;
 }
