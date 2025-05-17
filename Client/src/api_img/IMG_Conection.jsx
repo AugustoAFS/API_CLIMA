@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const PEXELS_API_KEY = 'XDQjtWxBBwTMR0YQW8tuPbxobrtGqb2q1d2HDP6F26zhpKyZgtnPmFk0';
-const PEXELS_BASE_URL = 'https://api.pexels.com/v1/search';
+const PEXELS_API_KEY = import.meta.env.VITE_PEXELS_API_KEY;
+const PEXELS_BASE_URL = import.meta.env.VITE_PEXELS_BASE_URL;
 
 export const getIMG = async (cidade) => {
   try {

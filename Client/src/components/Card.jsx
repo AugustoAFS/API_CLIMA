@@ -36,14 +36,18 @@ function Card({ onCitySelect }) {
 
     try {
       const data = await getClima(cidade);
-      setClima(data);
-      onCitySelect({
-        name: data.location.name,
-        lat: data.location.lat,
-        lon: data.location.lon,
-      });
-      fetchCountryCode(data.location.country);
-      fetchBackgroundImages(data.location.name);
+      if (data && data.location) {
+        setClima(data);
+        onCitySelect({
+          name: data.location.name,
+          lat: data.location.lat,
+          lon: data.location.lon,
+        });
+        fetchCountryCode(data.location.country);
+        fetchBackgroundImages(data.location.name);
+      } else {
+        setError('Dados do clima não encontrados.');
+      }
       setFade(false);
     } catch (error) {
       setError(error.message || 'Erro ao buscar informações do clima.');
@@ -137,7 +141,7 @@ function Card({ onCitySelect }) {
 
         {loading && <p>Carregando...</p>}
 
-        {clima && (
+        {clima && clima.location && (
           <div className="weather-container">
             <div className="location">
               <h3>
@@ -152,26 +156,30 @@ function Card({ onCitySelect }) {
               )}
             </div>
 
-            <div className="current-weather">
-              <img
-                src={`https:${clima.current.condition.icon}`}
-                alt={clima.current.condition.text}
-                className="weather-icon"
-              />
-              <div>
-                <h4>{clima.current.condition.text}</h4>
-                <p>{clima.current.temp_c}°C</p>
-                <p>Sensação térmica: {clima.current.feelslike_c}°C</p>
+            {clima.current && (
+              <div className="current-weather">
+                <img
+                  src={`https:${clima.current.condition.icon}`}
+                  alt={clima.current.condition.text}
+                  className="weather-icon"
+                />
+                <div>
+                  <h4>{clima.current.condition.text}</h4>
+                  <p>{clima.current.temp_c}°C</p>
+                  <p>Sensação térmica: {clima.current.feelslike_c}°C</p>
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="weather-details">
-              <p><i className="fa-solid fa-droplet"></i> Umidade: {clima.current.humidity}%</p>
-              <p><i className="fa-solid fa-wind"></i> Vento: {clima.current.wind_kph} km/h</p>
-              <p><i className="fa-solid fa-eye"></i> Visibilidade: {clima.current.vis_km} km</p>
-              <p><i className="fa-solid fa-weight"></i> Pressão: {clima.current.pressure_mb} hPa</p>
-              <p><i className="fa-solid fa-sun"></i> Índice UV: {clima.current.uv}</p>
-            </div>
+            {clima.current && (
+              <div className="weather-details">
+                <p><i className="fa-solid fa-droplet"></i> Umidade: {clima.current.humidity}%</p>
+                <p><i className="fa-solid fa-wind"></i> Vento: {clima.current.wind_kph} km/h</p>
+                <p><i className="fa-solid fa-eye"></i> Visibilidade: {clima.current.vis_km} km</p>
+                <p><i className="fa-solid fa-weight"></i> Pressão: {clima.current.pressure_mb} hPa</p>
+                <p><i className="fa-solid fa-sun"></i> Índice UV: {clima.current.uv}</p>
+              </div>
+            )}
           </div>
         )}
       </div>
